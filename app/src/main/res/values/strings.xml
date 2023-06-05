@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Placar Handball</string>
+    <string name="handball_court">Quadra de handball</string>
+    <string name="iniciar">Iniciar configuração</string>
+    <string name="historico">Histórico</string>
+    <string name="credits">Créditos</string>
+</resources>
