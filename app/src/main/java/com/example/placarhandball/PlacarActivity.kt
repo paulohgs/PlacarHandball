@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import org.w3c.dom.Text
 
 class PlacarActivity : AppCompatActivity() {
 
@@ -18,6 +19,8 @@ class PlacarActivity : AppCompatActivity() {
     var time_in_milli_seconds = 0L
     lateinit var timerTextView: TextView
     var time: Long = 0
+    var pontuationA: Int = 0
+    var pontutaionB: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +30,6 @@ class PlacarActivity : AppCompatActivity() {
         Log.d("PDM23", time.toString())
 
         timerTextView = findViewById(R.id.timerTextView)
-        val button: Button = findViewById(R.id.button)
         timerTextView.setOnClickListener {
             if(isRunning) {
                 pauseTimer()
@@ -35,6 +37,17 @@ class PlacarActivity : AppCompatActivity() {
                 time_in_milli_seconds = time * 60000L
                 startTimer(time_in_milli_seconds)
             }
+        }
+        val placar: TextView = findViewById(R.id.placar)
+        val teamA: TextView = findViewById(R.id.teamA)
+        teamA.setOnClickListener {
+            pontuationA += 1
+            placar.setText("$pontuationA x $pontutaionB")
+        }
+        val teamB: TextView = findViewById(R.id.teamB)
+        teamB.setOnClickListener {
+            pontutaionB += 1
+            placar.setText("$pontuationA x $pontutaionB")
         }
     }
 
