@@ -8,8 +8,10 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import com.example.placarhandball.model.Placar
 import org.w3c.dom.Text
 
+@Suppress("DEPRECATION")
 class PlacarActivity : AppCompatActivity() {
 
     var START_MILLI_SECONDS = 60000L
@@ -26,7 +28,8 @@ class PlacarActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_placar)
 
-        time = intent.getStringExtra("time")?.toLong() ?: 30
+        val placarConfig = intent.getSerializableExtra("placarModel") as Placar
+        time = placarConfig.time
         Log.d("PDM23", time.toString())
 
         timerTextView = findViewById(R.id.timerTextView)
@@ -40,11 +43,13 @@ class PlacarActivity : AppCompatActivity() {
         }
         val placar: TextView = findViewById(R.id.placar)
         val teamA: TextView = findViewById(R.id.teamA)
+        teamA.setText(placarConfig.teamA.toString())
         teamA.setOnClickListener {
             pontuationA += 1
             placar.setText("$pontuationA x $pontutaionB")
         }
         val teamB: TextView = findViewById(R.id.teamB)
+        teamB.setText(placarConfig.teamB.toString())
         teamB.setOnClickListener {
             pontutaionB += 1
             placar.setText("$pontuationA x $pontutaionB")
