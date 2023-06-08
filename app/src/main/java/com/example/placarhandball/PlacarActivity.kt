@@ -30,6 +30,7 @@ class PlacarActivity : AppCompatActivity() {
 
         val placarConfig = intent.getSerializableExtra("placarModel") as Placar
         time = placarConfig.time
+        time_in_milli_seconds = time * 60000L
         Log.d("PDM23", time.toString())
 
         timerTextView = findViewById(R.id.timerTextView)
@@ -37,8 +38,7 @@ class PlacarActivity : AppCompatActivity() {
             if(isRunning) {
                 pauseTimer()
             } else {
-                time_in_milli_seconds = time * 60000L
-                startTimer(time_in_milli_seconds)
+                startTimer()
             }
         }
         val placar: TextView = findViewById(R.id.placar)
@@ -61,8 +61,8 @@ class PlacarActivity : AppCompatActivity() {
         isRunning = false
     }
 
-    fun startTimer(time_in_seconds: Long) {
-        countDownTimer = object : CountDownTimer(time_in_seconds, 1000) {
+    fun startTimer() {
+        countDownTimer = object : CountDownTimer(time_in_milli_seconds, 1000) {
             override fun onFinish() {
                 Log.d("PDM23", "FINALIZOU")
             }
