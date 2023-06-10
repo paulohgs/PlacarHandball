@@ -33,7 +33,7 @@ class ConfigActivity : AppCompatActivity() {
             updatePlacar()
             saveConfig()
             val intent = Intent(this, PlacarActivity::class.java).apply {
-                putExtra("placarModel", placarModel)
+                putExtra("placarModel", placarModel).putExtra("stack", stack)
             }
             startActivity(intent)
         }

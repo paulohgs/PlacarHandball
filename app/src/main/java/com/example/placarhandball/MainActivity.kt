@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.example.placarhandball.model.HandballGame
+import com.google.android.material.snackbar.Snackbar
 import java.io.ByteArrayInputStream
 import java.io.ObjectInputStream
 
@@ -13,12 +14,18 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val ended = intent.getBooleanExtra("ended", false)
+
+        if(ended) {
+            showMessage(findViewById(R.id.main_screen))
+        }
     }
 
     fun startGameConfiguration(v: View) {
         var stack = openStack()
         val intent = Intent(this, ConfigActivity::class.java).apply {
-            putExtra("bd", "teste").putExtra("stack", stack)
+            putExtra("stack", stack)
         }
         startActivity(intent)
     }
@@ -48,5 +55,12 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, HistActivity::class.java).apply {
             putExtra("stack", stack)
         }
+    }
+
+    fun showMessage(v: View) {
+        val duration = Snackbar.LENGTH_LONG
+        val text = "O jogo foi finalizado."
+        val snack = Snackbar.make(v,text,duration)
+        snack.show()
     }
 }

@@ -1,5 +1,7 @@
 package com.example.placarhandball
 
+import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -7,11 +9,16 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import com.example.placarhandball.model.HandballGame
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.ObjectOutputStream
+import java.nio.charset.StandardCharsets
 
 @Suppress("DEPRECATION")
 class PlacarActivity : AppCompatActivity() {
 
     lateinit var stack: ArrayList<HandballGame>
+    lateinit var placarConfig: HandballGame
     var START_MILLI_SECONDS = 60000L
     lateinit var countDownTimer: CountDownTimer
     var isRunning: Boolean = false
@@ -24,12 +31,13 @@ class PlacarActivity : AppCompatActivity() {
     var oldPontuationB = 0
     var altA = false
     var altB = false
+    lateinit var placar: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_placar)
 
-        val placarConfig = intent.getSerializableExtra("placarModel") as HandballGame
+        placarConfig = intent.getSerializableExtra("placarModel") as HandballGame
         stack = intent.getSerializableExtra("stack") as ArrayList<HandballGame>
         time = placarConfig.time
         time_in_milli_seconds = time * 60000L
@@ -43,7 +51,7 @@ class PlacarActivity : AppCompatActivity() {
                 startTimer()
             }
         }
-        val placar: TextView = findViewById(R.id.placar)
+        placar = findViewById(R.id.placar)
 
         val teamA: TextView = findViewById(R.id.teamA)
         teamA.setText(placarConfig.teamA.toString())
@@ -77,6 +85,7 @@ class PlacarActivity : AppCompatActivity() {
             pontutaionB = oldPontuationB
             oldPontuationB = aux
         }
+        placar.setText("$pontuationA x $pontutaionB")
     }
 
     fun pauseTimer() {
@@ -102,5 +111,30 @@ class PlacarActivity : AppCompatActivity() {
         val minute = (time_in_milli_seconds/1000)/60
         val seconds = (time_in_milli_seconds/1000)%60
         timerTextView.setText("$minute:$seconds")
+    }
+
+    fun saveGame() {
+        val filename = "previousGame"
+        val sp = getSharedPreferences(filename, Context.MODE_PRIVATE)
+        var edShared = sp.edit()
+
+        var count = stack.size
+
+        edShared.putInt("numberOfMatches", count)
+        edShared.putString("teamA", placarConfig.teamA)
+        edShared.putString("teamB", placarConfig.teamB)
+        edShared.putLong("time", placarConfig.time)
+
+        var data = ByteArrayOutputStream()
+        var oos = ObjectOutputStream(data)
+        oos.writeObject(placarConfig)
+
+        edShared.putString("match ${count}", data.toString(StandardCharsets.ISO_8859_1.name()))
+        edShared.commit()
+
+        val intent = Intent(this, MainActivity::class.java).apply {
+            putExtra("ended", true)
+        }
+        startActivity(intent)
     }
 }
