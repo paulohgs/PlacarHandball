@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Equipe A"
-            android:inputType="textShortMessage" />
+            android:inputType="textLongMessage" />
 
         <EditText
             android:id="@+id/equipeB"
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Equipe B"
-            android:inputType="textShortMessage" />
+            android:inputType="textLongMessage" />
 
         <EditText
             android:id="@+id/timeGame"
