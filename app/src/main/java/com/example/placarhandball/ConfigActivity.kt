@@ -52,11 +52,11 @@ class ConfigActivity : AppCompatActivity() {
     fun saveConfig() {
         val configFilename = "config_placar"
         val sp = getSharedPreferences(configFilename, Context.MODE_PRIVATE)
-        var edShared = sp.edit()
+        val edShared = sp.edit()
         edShared.putString("teamA", placarModel.teamA)
         edShared.putString("teamB", placarModel.teamB)
         edShared.putLong("timeLong", placarModel.time)
-        edShared.commit()
+        edShared.apply()
     }
 
     fun openConfig() {

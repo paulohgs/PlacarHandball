@@ -8,8 +8,10 @@ import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import com.example.placarhandball.model.HandballGame
-import java.io.ByteArrayInputStream
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.io.ByteArrayOutputStream
 import java.io.ObjectOutputStream
 import java.nio.charset.StandardCharsets
@@ -19,7 +21,6 @@ class PlacarActivity : AppCompatActivity() {
 
     lateinit var stack: ArrayList<HandballGame>
     lateinit var placarConfig: HandballGame
-    var START_MILLI_SECONDS = 60000L
     lateinit var countDownTimer: CountDownTimer
     var isRunning: Boolean = false
     var time_in_milli_seconds = 0L
@@ -36,13 +37,11 @@ class PlacarActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_placar)
-
         placarConfig = intent.getSerializableExtra("placarModel") as HandballGame
         stack = intent.getSerializableExtra("stack") as ArrayList<HandballGame>
         time = placarConfig.time
         time_in_milli_seconds = time * 60000L
-        Log.d("PDM23", time.toString())
-
+        Log.d("PDM23", time_in_milli_seconds.toString())
         timerTextView = findViewById(R.id.timerTextView)
         timerTextView.setOnClickListener {
             if(isRunning) {
@@ -97,6 +96,7 @@ class PlacarActivity : AppCompatActivity() {
         countDownTimer = object : CountDownTimer(time_in_milli_seconds, 1000) {
             override fun onFinish() {
                 Log.d("PDM23", "FINALIZOU")
+                finalTimeAlert(this@PlacarActivity)
             }
             override fun onTick(p0: Long) {
                 time_in_milli_seconds = p0
@@ -136,5 +136,26 @@ class PlacarActivity : AppCompatActivity() {
             putExtra("ended", true)
         }
         startActivity(intent)
+    }
+
+    fun finalTimeAlert(context: Context) {
+        val alert = AlertDialog.Builder(context)
+        alert.setTitle("Primeiro tempo acabou.")
+        alert.setMessage("Ir para o intervalo?")
+        alert.setPositiveButton("Sim") { dialog, _ ->
+            time_in_milli_seconds = 2 * 60000L
+            startTimer()
+            dialog.dismiss()
+        }
+        alert.setNeutralButton("Não") { dialog, _ ->
+            time_in_milli_seconds = time * 60000L
+            startTimer()
+            dialog.dismiss()
+        }
+        alert.setNegativeButton("Terminar partida") { dialog, _ ->
+            saveGame()
+            dialog.dismiss()
+        }
+        alert.show()
     }
 }
